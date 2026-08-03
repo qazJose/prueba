@@ -6,15 +6,16 @@ window.addEventListener("load", () => {
   }
   const ctx = canvas.getContext('2d');
 
-  // ==========================================================
-  // --- CONFIGURACIÓN PRINCIPAL (AQUÍ MODIFICAS LOS VALORES) ---
-  // ==========================================================
-  const VELOCIDAD_RAMAS = 90; // Velocidad de crecimiento del árbol
-  const TOTAL_PETALOS = 100;    // <-- CAMBIA ESTE NÚMERO PARA MÁS O MENOS CORAZONES VOLANDO
+  // --- CONFIGURACIÓN PRINCIPAL ---
+  const VELOCIDAD_RAMAS = 90;
+  const TOTAL_PETALOS = 100;
   const PALETA_CORAZONES = [
     '#d90429', '#ef233c', '#ff4d6d', '#ff758f', 
     '#c9184a', '#800f2f', '#ff0054', '#ffb3c1'
   ];
+
+  // Detectar si la pantalla es de celular
+  const esMovil = window.innerWidth < 768;
 
   // --- CAPA DE PÉTALOS CON VIENTO ---
   const particleCanvas = document.createElement('canvas');
@@ -52,9 +53,9 @@ window.addEventListener("load", () => {
     context.restore();
   }
 
-  // --- GENERAR LA COPA DE ÁRBOL EN FORMA DE CORAZÓN GIGANTE ---
+  // --- GENERAR LA COPA FRONDOSA EN FORMA DE CORAZÓN ---
   function drawHeartCanopy(centerX, centerY) {
-    const totalLeaves = 280; // Cantidad de hojas en la copa
+    const totalLeaves = esMovil ? 350 : 450;
     let count = 0;
 
     function addLeaf() {
@@ -66,23 +67,24 @@ window.addEventListener("load", () => {
       const hx = 16 * Math.pow(Math.sin(t), 3);
       const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
 
-      const scale = 7.5; 
+      // Ajusta el tamaño de la copa del árbol según si es celular o PC
+      const scale = esMovil ? 5.8 : 8.0;
       const leafX = centerX + hx * scale * r;
       const leafY = centerY + hy * scale * r;
 
       const color = PALETA_CORAZONES[Math.floor(Math.random() * PALETA_CORAZONES.length)];
-      const size = Math.random() * 0.8 + 0.5;
+      const size = (Math.random() * 0.9 + 0.5) * (esMovil ? 0.85 : 1);
 
       drawHeart(ctx, leafX, leafY, size, color);
       count++;
 
-      setTimeout(addLeaf, 15);
+      setTimeout(addLeaf, 10);
     }
 
     addLeaf();
   }
 
-  // --- DIBUJO DE LAS RAMAS DEL ÁRBOL (CON PÉTALOS EN LAS RAMAS) ---
+  // --- DIBUJO DE UN ÁRBOL ROBUSTO Y FRONDOSO ---
   function drawBranch(x, y, len, angle, branchWidth) {
     ctx.beginPath();
     ctx.save();
@@ -99,41 +101,69 @@ window.addEventListener("load", () => {
     ctx.stroke();
     ctx.restore();
 
-    // Cuando la rama es pequeña, DIBUJAMOS EL CORAZÓN EN LA PUNTA DE LA RAMA
-    if (len < 15) {
-      const color = PALETA_CORAZONES[Math.floor(Math.random() * PALETA_CORAZONES.length)];
-      drawHeart(ctx, endX, endY, Math.random() * 0.8 + 0.5, color);
+    if (len < (esMovil ? 14 : 18)) {
+      for (let i = 0; i < 3; i++) {
+        const offsetX = (Math.random() - 0.5) * (esMovil ? 12 : 16);
+        const offsetY = (Math.random() - 0.5) * (esMovil ? 12 : 16);
+        const color = PALETA_CORAZONES[Math.floor(Math.random() * PALETA_CORAZONES.length)];
+        drawHeart(ctx, endX + offsetX, endY + offsetY, Math.random() * 0.8 + 0.5, color);
+      }
       return; 
     }
 
     setTimeout(() => {
-      drawBranch(endX, endY, len * 0.76, angle - 16 + (Math.random() * 6 - 3), branchWidth * 0.7);
-      drawBranch(endX, endY, len * 0.76, angle + 16 + (Math.random() * 6 - 3), branchWidth * 0.7);
+      drawBranch(
+        endX, 
+        endY, 
+        len * 0.78, 
+        angle - 20 + (Math.random() * 6 - 3), 
+        branchWidth * 0.75
+      );
+      drawBranch(
+        endX, 
+        endY, 
+        len * 0.78, 
+        angle + 20 + (Math.random() * 6 - 3), 
+        branchWidth * 0.75
+      );
+
+      if (branchWidth > 8 && Math.random() > 0.4) {
+        drawBranch(
+          endX, 
+          endY, 
+          len * 0.68, 
+          angle + (Math.random() * 14 - 7), 
+          branchWidth * 0.65
+        );
+      }
     }, VELOCIDAD_RAMAS);
   }
 
-  // Posición del árbol (derecha y abajo)
-  const startX = canvas.width * 0.76;
-  const startY = canvas.height * 0.88;
+  // Posición del árbol adaptada: Más centrado en celular (0.55) vs Derecha en PC (0.76)
+  const startX = esMovil ? canvas.width * 0.55 : canvas.width * 0.76;
+  const startY = esMovil ? canvas.height * 0.94 : canvas.height * 0.88;
+  const longitudInicial = esMovil ? 95 : 120;
+  const grosorInicial = esMovil ? 20 : 24;
+  const alturaCopa = esMovil ? 170 : 220;
 
-  // 1. Nace el tronco, las ramas y sus pétalos individuales
-  drawBranch(startX, startY, 115, 0, 15);
+  // 1. Nace el árbol
+  drawBranch(startX, startY, longitudInicial, 0, grosorInicial);
 
-  // 2. Aflora la copa en forma de corazón gigante sobre las ramas
+  // 2. Aflora la copa en forma de corazón gigante
   setTimeout(() => {
-    drawHeartCanopy(startX, startY - 215);
-  }, 1200);
+    drawHeartCanopy(startX, startY - alturaCopa);
+  }, 1300);
 
 
   // --- PÉTALOS VOLANDO CON VIENTO HACIA LA IZQUIERDA ---
   const petals = [];
   for (let i = 0; i < TOTAL_PETALOS; i++) {
     petals.push({
-      x: startX - Math.random() * 100, 
-      y: (startY - 220) + (Math.random() - 0.5) * 120,
+      x: startX - Math.random() * 80, 
+      y: (startY - alturaCopa) + (Math.random() - 0.5) * 100,
       size: Math.random() * 0.6 + 0.35,
-      speedX: -(Math.random() * 1.8 + 0.8), // Viento hacia la izquierda
-      speedY: Math.random() * 0.8 + 0.3,    // Caída suave
+      speedX: -(Math.random() * 1.5 + 0.7),
+      speedY: Math.random() * 0.8 + 0.3,
       angle: Math.random() * Math.PI * 2,
       color: PALETA_CORAZONES[Math.floor(Math.random() * PALETA_CORAZONES.length)],
       opacity: Math.random() * 0.7 + 0.3
@@ -152,7 +182,7 @@ window.addEventListener("load", () => {
 
       if (p.x < -20 || p.y > particleCanvas.height + 20) {
         p.x = startX + (Math.random() - 0.5) * 80;
-        p.y = (startY - 220) + (Math.random() - 0.5) * 100;
+        p.y = (startY - alturaCopa) + (Math.random() - 0.5) * 90;
       }
 
       drawHeart(pCtx, p.x, currentY, p.size, p.color, p.opacity);
@@ -167,7 +197,7 @@ window.addEventListener("load", () => {
 
 
   // --- EFECTO MÁQUINA DE ESCRIBIR ---
-  const text = "Falta muy poco para tu cumpleaños, y no puedo esperar para celebrar tu día y llenarte de abrazos, besos y sorpresas.\n\nGracias por existir y dejarme compartir un pedacito de tu vida conmigo.\n\n¡Te adoro mi cuchitura hermosa! ❤️";
+  const text = "Falta muy poco para tu cumpleaños, y no puedo esperar para celebrar tu día y llenarte de abrazos, besos y sorpresas.\n\n Gracias por existir y dejarme compartir un pedacito de tu vida conmigo.\n\n¡Te adoro mi cuchitura hermosa! ❤️";
   let index = 0;
 
   function typeWriter() {
@@ -182,7 +212,7 @@ window.addEventListener("load", () => {
 
 
   // --- CONTADOR REGRESIVO ---
-  const targetDate = new Date(2026, 10, 12, 0, 0, 0).getTime(); 
+  const targetDate = new Date(2026, 7, 10, 0, 0, 0).getTime(); 
 
   function updateCountdown() {
     const countdownElem = document.getElementById("countdown");
