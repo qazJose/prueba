@@ -212,7 +212,7 @@ window.addEventListener("load", () => {
 
 
   // --- CONTADOR REGRESIVO ---
-  const targetDate = new Date(2026, 7, 10, 0, 0, 0).getTime(); 
+  const targetDate = new Date(2026, 10, 12, 0, 0, 0).getTime(); 
 
   function updateCountdown() {
     const countdownElem = document.getElementById("countdown");
