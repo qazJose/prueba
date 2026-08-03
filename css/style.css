@@ -1,0 +1,78 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #fbeee6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.card {
+position: absolute;
+  top: 15%;
+  left: 8%;
+  z-index: 2; /* Por encima del canvas */
+  /* resto de tus estilos... */
+}
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Detrás de la tarjeta */
+  pointer-events: none;
+}
+
+
+.card h2 {
+  color: #d63384;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+#typed-text {
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  min-height: 100px;
+  white-space: pre-line;
+}
+
+.countdown-box {
+  margin-top: 15px;
+  border-top: 1px dashed #f08080;
+  padding-top: 10px;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+#countdown {
+  font-weight: bold;
+  color: #c71585;
+  font-size: 1.1rem;
+  margin-top: 4px;
+}
