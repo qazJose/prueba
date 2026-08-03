@@ -21,7 +21,6 @@ body {
   overflow: hidden;
 }
 
-/* El canvas queda en el fondo y no bloquea clics ni selección de texto */
 canvas {
   position: absolute;
   top: 0;
@@ -32,7 +31,7 @@ canvas {
   pointer-events: none;
 }
 
-/* Tarjeta flotante por encima del árbol */
+/* Tarjeta por defecto (Pantallas de PC o Tablet) */
 .card {
   position: absolute;
   top: 15%;
@@ -73,4 +72,31 @@ canvas {
   color: #c71585;
   font-size: 1.15rem;
   margin-top: 5px;
+}
+
+/* --- ADAPTACIÓN AUTOMÁTICA PARA CELULARES --- */
+@media (max-width: 768px) {
+  .card {
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%); /* Centra la tarjeta horizontalmente */
+    width: 88%;                  /* No se sale de los bordes del teléfono */
+    max-width: 340px;
+    padding: 18px;
+  }
+
+  .card h2 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+  }
+
+  #typed-text {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    min-height: 95px;
+  }
+
+  #countdown {
+    font-size: 1.05rem;
+  }
 }
