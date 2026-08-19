@@ -19,6 +19,9 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 canvas {
@@ -31,72 +34,191 @@ canvas {
   pointer-events: none;
 }
 
-/* Tarjeta por defecto (Pantallas de PC o Tablet) */
+/* --- ENVOLTORIO GENERAL --- */
+.envelope-wrapper {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 1s ease-in-out;
+}
+
+/* Estado cuando el sobre abre y se desplaza libremente en PC */
+.envelope-wrapper.open {
+  transform: translateY(-20px);
+}
+
+.envelope-container {
+  position: relative;
+  width: 320px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+}
+
+/* --- DISEÑO 3D DEL SOBRE --- */
+.envelope {
+  position: absolute;
+  width: 320px;
+  height: 200px;
+  background-color: #f28b82;
+  border-radius: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  animation: float 3s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+.envelope .front {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 3;
+}
+
+.envelope .pocket {
+  border-left: 160px solid #f07870;
+  border-right: 160px solid #f07870;
+  border-bottom: 110px solid #e5635a;
+  border-top: 90px solid transparent;
+  border-radius: 6px;
+}
+
+.envelope .flap {
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-top: 110px solid #f28b82;
+  border-bottom: 90px solid transparent;
+  transform-origin: top;
+  transition: transform 0.6s ease, z-index 0.6s;
+  z-index: 4;
+}
+
+/* Abrir solapa superior */
+.envelope-wrapper.open .flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.envelope .heart-seal {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  font-size: 1.8rem;
+  transition: opacity 0.4s ease;
+}
+
+.envelope-wrapper.open .heart-seal {
+  opacity: 0;
+}
+
+/* --- TARJETA / CARTA CORREGIDA --- */
 .card {
   position: absolute;
-  top: 15%;
-  left: 8%;
-  width: 340px;
+  top: 15px;
+  width: 290px;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(8px);
   z-index: 2;
-  background: rgba(255, 255, 255, 0.85);
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(6px);
+  opacity: 0;
+  transform: translateY(0);
+  transition: transform 0.8s ease-in-out 0.5s, opacity 0.6s ease-in-out 0.5s;
+  pointer-events: none;
+}
+
+/* Al abrir el sobre, la carta sube suavemente */
+.envelope-wrapper.open .card {
+  opacity: 1;
+  transform: translateY(-210px);
+  z-index: 6; /* Se coloca por encima del sobre para una lectura clara */
+  pointer-events: auto;
 }
 
 .card h2 {
   color: #d63384;
-  font-size: 1.3rem;
-  margin-bottom: 15px;
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 #typed-text {
   color: #4a4a4a;
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.5;
   min-height: 110px;
   white-space: pre-line;
 }
 
+/* --- CAJA DEL CONTADOR --- */
 .countdown-box {
-  margin-top: 20px;
-  border-top: 1px dashed #f08080;
-  padding-top: 12px;
-  color: #777;
+  margin-top: 25px;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 12px 25px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  color: #666;
   font-size: 0.85rem;
+  z-index: 7;
+  transition: opacity 0.5s ease;
 }
 
 #countdown {
   font-weight: bold;
   color: #c71585;
-  font-size: 1.15rem;
-  margin-top: 5px;
+  font-size: 1.2rem;
+  margin-top: 4px;
 }
 
-/* --- ADAPTACIÓN AUTOMÁTICA PARA CELULARES --- */
+/* --- ADAPTACIÓN RESPONSIVA PARA CELULARES --- */
 @media (max-width: 768px) {
+  .envelope-container {
+    width: 280px;
+    height: 175px;
+  }
+
+  .envelope {
+    width: 280px;
+    height: 175px;
+  }
+
+  .envelope .pocket {
+    border-left-width: 140px;
+    border-right-width: 140px;
+    border-bottom-width: 95px;
+    border-top-width: 80px;
+  }
+
+  .envelope .flap {
+    border-left-width: 140px;
+    border-right-width: 140px;
+    border-top-width: 95px;
+    border-bottom-width: 80px;
+  }
+
   .card {
-    top: 6%;
-    left: 50%;
-    transform: translateX(-50%); /* Centra la tarjeta horizontalmente */
-    width: 88%;                  /* No se sale de los bordes del teléfono */
-    max-width: 340px;
-    padding: 18px;
+    width: 260px;
+    padding: 16px;
+  }
+
+  .envelope-wrapper.open .card {
+    transform: translateY(-195px);
   }
 
   .card h2 {
-    font-size: 1.15rem;
-    margin-bottom: 10px;
+    font-size: 1rem;
   }
 
   #typed-text {
-    font-size: 0.88rem;
-    line-height: 1.45;
-    min-height: 95px;
-  }
-
-  #countdown {
-    font-size: 1.05rem;
+    font-size: 0.82rem;
   }
 }

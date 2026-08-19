@@ -8,7 +8,7 @@ window.addEventListener("load", () => {
 
   // --- CONFIGURACIÓN PRINCIPAL ---
   const VELOCIDAD_RAMAS = 90;
-  const TOTAL_PETALOS = 100;
+  const TOTAL_PETALOS = 90;
   const PALETA_CORAZONES = [
     '#d90429', '#ef233c', '#ff4d6d', '#ff758f', 
     '#c9184a', '#800f2f', '#ff0054', '#ffb3c1'
@@ -54,7 +54,7 @@ window.addEventListener("load", () => {
 
   // --- DIBUJAR COPA DEL ÁRBOL ---
   function drawHeartCanopy(centerX, centerY) {
-    const totalLeaves = esMovil ? 350 : 450;
+    const totalLeaves = esMovil ? 320 : 420;
     let count = 0;
 
     function addLeaf() {
@@ -66,12 +66,12 @@ window.addEventListener("load", () => {
       const hx = 16 * Math.pow(Math.sin(t), 3);
       const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
 
-      const scale = esMovil ? 5.8 : 8.0;
+      const scale = esMovil ? 5.5 : 7.5;
       const leafX = centerX + hx * scale * r;
       const leafY = centerY + hy * scale * r;
 
       const color = PALETA_CORAZONES[Math.floor(Math.random() * PALETA_CORAZONES.length)];
-      const size = (Math.random() * 0.9 + 0.5) * (esMovil ? 0.85 : 1);
+      const size = (Math.random() * 0.85 + 0.5) * (esMovil ? 0.85 : 1);
 
       drawHeart(ctx, leafX, leafY, size, color);
       count++;
@@ -119,35 +119,35 @@ window.addEventListener("load", () => {
     }, VELOCIDAD_RAMAS);
   }
 
-  // FUNCIÓN PARA INICIAR EL ÁRBOL
+  // INICIAR ÁRBOL
   function iniciarAnimacionArbol() {
-    const startX = esMovil ? canvas.width * 0.55 : canvas.width * 0.76;
-    const startY = esMovil ? canvas.height * 0.94 : canvas.height * 0.88;
-    const longitudInicial = esMovil ? 95 : 120;
-    const grosorInicial = esMovil ? 20 : 24;
-    const alturaCopa = esMovil ? 170 : 220;
+    const startX = esMovil ? canvas.width * 0.8 : canvas.width * 0.82;
+    const startY = esMovil ? canvas.height * 0.95 : canvas.height * 0.92;
+    const longitudInicial = esMovil ? 90 : 115;
+    const grosorInicial = esMovil ? 18 : 22;
+    const alturaCopa = esMovil ? 160 : 210;
 
     drawBranch(startX, startY, longitudInicial, 0, grosorInicial);
 
     setTimeout(() => {
       drawHeartCanopy(startX, startY - alturaCopa);
-    }, 1300);
+    }, 1200);
 
-    // Inicializar partículas de pétalos volando
+    // Pétalos volando hacia la izquierda
     for (let i = 0; i < TOTAL_PETALOS; i++) {
       petals.push({
-        x: startX - Math.random() * 80, 
+        x: startX - Math.random() * 60, 
         y: (startY - alturaCopa) + (Math.random() - 0.5) * 100,
         size: Math.random() * 0.6 + 0.35,
-        speedX: -(Math.random() * 1.5 + 0.7),
-        speedY: Math.random() * 0.8 + 0.3,
+        speedX: -(Math.random() * 1.4 + 0.6),
+        speedY: Math.random() * 0.7 + 0.3,
         angle: Math.random() * Math.PI * 2,
         color: PALETA_CORAZONES[Math.floor(Math.random() * PALETA_CORAZONES.length)],
         opacity: Math.random() * 0.7 + 0.3
       });
     }
 
-    setTimeout(animateParticles, 1800);
+    setTimeout(animateParticles, 1600);
   }
 
   // --- FUEGOS ARTIFICIALES Y PÉTALOS ---
@@ -155,7 +155,7 @@ window.addEventListener("load", () => {
   const fireworks = [];
 
   function createHeartFirework(x, y) {
-    const particleCount = esMovil ? 30 : 50;
+    const particleCount = esMovil ? 28 : 45;
     const color = PALETA_CORAZONES[Math.floor(Math.random() * PALETA_CORAZONES.length)];
 
     for (let i = 0; i < particleCount; i++) {
@@ -166,8 +166,8 @@ window.addEventListener("load", () => {
       fireworks.push({
         x: x,
         y: y,
-        vx: hx * (Math.random() * 0.15 + 0.1),
-        vy: hy * (Math.random() * 0.15 + 0.1),
+        vx: hx * (Math.random() * 0.14 + 0.09),
+        vy: hy * (Math.random() * 0.14 + 0.09),
         size: Math.random() * 0.5 + 0.3,
         color: color,
         alpha: 1,
@@ -177,8 +177,8 @@ window.addEventListener("load", () => {
   }
 
   function launchRandomFirework() {
-    const x = Math.random() * (particleCanvas.width * 0.8) + (particleCanvas.width * 0.1);
-    const y = Math.random() * (particleCanvas.height * 0.4) + (particleCanvas.height * 0.1);
+    const x = Math.random() * (particleCanvas.width * 0.7) + (particleCanvas.width * 0.1);
+    const y = Math.random() * (particleCanvas.height * 0.35) + (particleCanvas.height * 0.1);
     createHeartFirework(x, y);
   }
 
@@ -193,11 +193,11 @@ window.addEventListener("load", () => {
       const currentY = p.y + Math.sin(p.angle) * 0.8;
 
       if (p.x < -20 || p.y > particleCanvas.height + 20) {
-        const startX = esMovil ? canvas.width * 0.55 : canvas.width * 0.76;
-        const startY = esMovil ? canvas.height * 0.94 : canvas.height * 0.88;
-        const alturaCopa = esMovil ? 170 : 220;
-        p.x = startX + (Math.random() - 0.5) * 80;
-        p.y = (startY - alturaCopa) + (Math.random() - 0.5) * 90;
+        const startX = esMovil ? canvas.width * 0.8 : canvas.width * 0.82;
+        const startY = esMovil ? canvas.height * 0.95 : canvas.height * 0.92;
+        const alturaCopa = esMovil ? 160 : 210;
+        p.x = startX + (Math.random() - 0.5) * 70;
+        p.y = (startY - alturaCopa) + (Math.random() - 0.5) * 80;
       }
 
       drawHeart(pCtx, p.x, currentY, p.size, p.color, p.opacity);
@@ -220,10 +220,8 @@ window.addEventListener("load", () => {
     requestAnimationFrame(animateParticles);
   }
 
-  // --- EFECTO MÁQUINA DE ESCRIBIR ---
-  const text = "¡¡Llegó el día tan esperado!! 🎉🥳\n\n¡FELIZ CUMPLEAÑOS MI CUCHITURA HERMOSA! ❤️\n\nHoy celebro tu vida, tu sonrisa y la persona increíble que eres. Espero que este día esté lleno de momentos mágicos como tú. ¡Te quiero con todo mi corazón!";
-
-
+  // --- MÁQUINA DE ESCRIBIR ---
+  const text = " 🎉🥳\n¡FELIZ CUMPLEAÑOS MI CUCHITURA HERMOSA! ❤️\nHoy celebro tu vida, tu sonrisa y la persona increíble que eres. Espero que este día esté lleno de momentos mágicos como tú. no puedo esperar para verte, compartir y llenarte de  besos y abrazos .\nGracias por existir y dejarme compartir un pedacito de tu vida conmigo.\n¡Te adoro mi cuchitura hermosa! ❤️ ¡Te quiero con todo mi corazón! ";
   let index = 0;
 
   function typeWriter() {
@@ -231,13 +229,12 @@ window.addEventListener("load", () => {
     if (typedTextElem && index < text.length) {
       typedTextElem.innerHTML += text.charAt(index) === '\n' ? '<br>' : text.charAt(index);
       index++;
-      setTimeout(typeWriter, 40);
+      setTimeout(typeWriter, 38);
     }
   }
 
-  // --- CONTADOR REGRESIVO Y EVENTO DE APERTURA ---
-  // Fecha: 12 de Noviembre de 2026 (Mes 10 en JS)
-  const targetDate = new Date(2026, 7, 12, 0, 0, 0).getTime(); 
+  // --- CONTADOR Y APERTURA DE SOBRE ---
+  const targetDate = new Date(2026, 10, 12, 0, 0, 0).getTime(); 
   let sobreAbierto = false;
 
   function updateCountdown() {
@@ -248,7 +245,6 @@ window.addEventListener("load", () => {
     const difference = targetDate - now;
 
     if (difference > 0) {
-      // MIENTRAS ESPERA
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
@@ -256,28 +252,25 @@ window.addEventListener("load", () => {
 
       countdownElem.innerText = `${days}d ${hours}h ${minutes}m ${segundosPad(seconds)}s`;
     } else {
-      // LLEGÓ EL MOMENTO CERO
       clearInterval(intervaloContador);
-      countdownElem.innerText = "¡Llegó el día! 🎉❤️";
-
+      
+countdownElem.innerText = " ";
       if (!sobreAbierto) {
         sobreAbierto = true;
         
-        // 1. Abrir el sobre
+        // Abrir sobre
         const wrapper = document.getElementById("envelope-wrapper");
         if (wrapper) wrapper.classList.add("open");
 
-        // 2. Ocultar título previo del contador
         const titleElem = document.getElementById("countdown-title");
-        if (titleElem) titleElem.innerText = "¡Es hoy!";
+        if (titleElem) titleElem.innerText = "🐼(❁´◡`❁)😍😍😍";
 
-        // 3. Iniciar árbol y fuegos artificiales
+        // Disparar árbol, fuegos artificiales y texto
         iniciarAnimacionArbol();
         launchRandomFirework();
         setInterval(launchRandomFirework, 700);
 
-        // 4. Iniciar texto tipeado tras salir la carta
-        setTimeout(typeWriter, 1200);
+        setTimeout(typeWriter, 1100);
       }
     }
   }
