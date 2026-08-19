@@ -11,17 +11,36 @@
   <div class="container">
     <canvas id="canvas"></canvas>
 
-    <div class="card" id="card">
-      <h2>Para mi pedacito de cielo en la tierra:🌺</h2>
-      <p id="typed-text"></p>
+    <!-- ENVOLTORIO PRINCIPAL -->
+    <div class="envelope-wrapper" id="envelope-wrapper">
       
-      <div class="countdown-box">
-        <span>Esperando tu cumple en...</span>
-        <div id="countdown">1d 00h 00m 00s</div>
+      <!-- CONTENEDOR DEL SOBRE Y CARTA -->
+      <div class="envelope-container">
+        
+        <!-- CARTA/TARJETA -->
+        <div class="card" id="card">
+          <h2>Para mi pedacito de cielo en la tierra: 🌺</h2>
+          <p id="typed-text"></p>
+        </div>
+
+        <!-- SOBRE -->
+        <div class="envelope" id="envelope">
+          <div class="front flap"></div>
+          <div class="front pocket"></div>
+          <div class="heart-seal">❤️</div>
+        </div>
+
       </div>
+
+      <!-- CONTADOR DEBAJO DEL SOBRE -->
+      <div class="countdown-box" id="countdown-box">
+        <span id="countdown-title">Esperando tu cumple en...</span>
+        <div id="countdown">00d 00h 00m 00s</div>
+      </div>
+
     </div>
   </div>
 
-  <script src="java/script.js"></script>
+  <script src="java/scripts.js"></script>
 </body>
 </html>
